@@ -1,6 +1,5 @@
 package cloudportfolio.system;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -12,6 +11,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import cloudportfolio.entities.User;
+import cloudportfolio.ui.Menu;
 
 public class CloudPortfolio
 {
@@ -24,21 +24,16 @@ public class CloudPortfolio
 	private FileReader input;
 	private RandomAccessFile bufRead;
 	private Scanner sc = new Scanner(System.in);
+	
+	private Menu m;
 
 	private User currentUser;
 
 	private String u = "", p = "";		// used for credentials
 
-
-	public static void main(String[] args) throws IOException
-	{
-		CloudPortfolio cp = new CloudPortfolio();
-	}
-
-	CloudPortfolio() throws IOException 
+	public CloudPortfolio() throws IOException
 	{
 		setup();
-		boot();
 	}
 
 	/*
@@ -59,6 +54,13 @@ public class CloudPortfolio
 		bufRead = new RandomAccessFile(userFile, "r");
 
 		readUsers();
+		
+		m = new Menu(this);
+	}
+	
+	public void boot() throws IOException
+	{
+		m.displayStartMenu();
 	}
 
 	/*
@@ -86,55 +88,55 @@ public class CloudPortfolio
 	/*
 	 * Boot menu, could possibly be renamed
 	 */
-	private void boot() throws IOException
-	{
-		boolean keepRunning = true;
-		int val = 0;
-
-		System.out.println("###\tCloudPortfolio\t###");
-
-		while(keepRunning) {
-			displayOptions();
-			val = sc.nextInt();
-
-			switch(val) {
-			case 1: // create account
-				promptCredentials();
-				createAccount();
-				break;
-
-			case 2: // log in
-				promptCredentials();
-				if(logIn(u, p)) {
-					System.out.println("Log in successful!");
-					userPanel();
-				}
-				else
-					System.err.println("DID NOT FOUND USER");
-				break;
-
-			case 3: // list users
-				listUsers();
-				break;
-
-			case 4:	// delete user
-				listUsers();
-				System.out.print("Select user for deletion: ");
-				deleteUser(sc.next());
-				break;
-
-			case 5: // exit
-				System.exit(0);
-				break;
-			}
-		}
-
-	}
+//	private void boot() throws IOException
+//	{
+//		boolean keepRunning = true;
+//		int val = 0;
+//
+//		System.out.println("###\tCloudPortfolio\t###");
+//
+//		while(keepRunning) {
+//			displayOptions();
+//			val = sc.nextInt();
+//
+//			switch(val) {
+//			case 1: // create account
+//				promptCredentials();
+//				createAccount();
+//				break;
+//
+//			case 2: // log in
+//				promptCredentials();
+//				if(logIn()) {
+//					System.out.println("Log in successful!");
+//					userPanel();
+//				}
+//				else
+//					System.err.println("DID NOT FOUND USER");
+//				break;
+//
+//			case 3: // list users
+//				listUsers();
+//				break;
+//
+//			case 4:	// delete user
+//				listUsers();
+//				System.out.print("Select user for deletion: ");
+//				deleteUser(sc.next());
+//				break;
+//
+//			case 5: // exit
+//				System.exit(0);
+//				break;
+//			}
+//		}
+//
+//	}
 
 	/*
 	 * Needs to be better implemented, does not work in present form.
 	 */
-	private void deleteUser(String username) throws IOException 
+	public void deleteUser(String username) throws IOException 
 	{
 		for(User x : users) {
 			if(x.getName().equals(username)) {
@@ -163,7 +165,7 @@ public class CloudPortfolio
 	 * creates the entries in the users.txt file. This is part of the
 	 * first iteration and will be improved upon.
 	 */
-	private void createAccount() throws IOException
+	public void createAccount() throws IOException
 	{
 		if(checkDuplicate(u)) {
 			promptCredentials();
@@ -220,7 +222,7 @@ public class CloudPortfolio
 	/*
 	 * Ask user for username and password to be used in later methods
 	 */
-	private void promptCredentials()
+	public void promptCredentials()
 	{
 		u = p = "";
 
@@ -293,7 +295,7 @@ public class CloudPortfolio
 		}
 	}
 
-	private void createFolder(File file) {
+	public void createFolder(File file) {
 		if(!file.exists()) {
 			if(file.mkdir()) {
 				System.out.println("Directory was created!");
@@ -303,7 +305,7 @@ public class CloudPortfolio
 		}
 	}
 
-	private boolean logIn(String username, String password) throws IOException
+	public boolean logIn() throws IOException
 	{	
 		String line;
 		String user = "", pass = "";
@@ -321,7 +323,7 @@ public class CloudPortfolio
 				pass = line.substring(9);
 			}
 
-			if(username.equals(user) && password.equals(pass)) {
+			if(u.equals(user) && p.equals(pass)) {
 				found = true;
 				break;
 			}
@@ -329,14 +331,14 @@ public class CloudPortfolio
 
 		/* ugly way to find user */
 		for(User x : users) {
-			if(x.getName().equals(username))
+			if(x.getName().equals(u))
 				currentUser = x;
 		}
 
 		return found;	
 	}
 
-	private void listUsers() throws IOException
+	public void listUsers() throws IOException
 	{
 		String line;
 		String user = "";
@@ -383,6 +385,11 @@ public class CloudPortfolio
 	public String getRootDir() throws IOException 
 	{ 
 		return rootDir.getCanonicalPath(); 
+	}
+	
+	public User getCurrentUser()
+	{
+		return currentUser;
 	}
 }
 

@@ -116,5 +116,7 @@ public class User
 	public String getName() { return name; }
 	
 	public long getID() { return id; }
+	
+	public File getUserDir() { return userDir; }
 
 }
