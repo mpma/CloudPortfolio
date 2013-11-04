@@ -82,7 +82,7 @@ public class User
 	public void listFILES()
 	{
 		for(CloudFile cf : files) {
-			System.out.println(cf.getFile().getName());
+			System.out.println(cf.toString());
 		}
 	}
 	

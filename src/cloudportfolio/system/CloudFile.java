@@ -74,5 +74,13 @@ public class CloudFile
 	{
 		return file;
 	}
+	
+	public String toString()
+	{
+		String s = "FILE: " + file.getName()
+				+ "\nOwner(s): " + owners.toString();
+		
+		return s;
+	}
 
 }
