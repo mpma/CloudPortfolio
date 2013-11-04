@@ -1,10 +1,8 @@
 package cloudportfolio.system;
 
 import java.io.File;
-import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Set;
-import java.util.concurrent.locks.ReadWriteLock;
 
 import cloudportfolio.entities.User;
 
@@ -17,6 +15,8 @@ public class CloudFile
 	private Hashtable owners;
 	private Hashtable r;
 	private Hashtable rw;
+	
+	private User owner;
 	
 	private final int READ = 1;
 	private final int READWRITE = 2;
@@ -31,6 +31,7 @@ public class CloudFile
 		r = new Hashtable<Long, User>();
 		rw = new Hashtable<Long, User>();
 		
+		this.owner = owner;
 		add(owners, owner);
 	}
 	
@@ -78,8 +79,20 @@ public class CloudFile
 	public String toString()
 	{
 		String s = "FILE: " + file.getName()
-				+ "\nOwner(s): " + owners.toString();
+				+ "\nOwner: " + printMembers(owners);
 		
+		return s;
+	}
+
+	private String printMembers(Hashtable<Long, User> table)
+	{
+		String s = "";
+		Set<Long> keys = table.keySet();
+		for(long key: keys) {
+			s += table.get(key).getName() 
+					+ "[" + table.get(key).getID() + "] ";
+		}
+			
 		return s;
 	}
 
