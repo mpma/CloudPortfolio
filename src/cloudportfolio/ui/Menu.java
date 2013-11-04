@@ -81,7 +81,6 @@ public class Menu
 			switch(val) {
 			case 1: // upload file
 				System.out.print("Select file: ");
-				//file = new File(sc.next());
 				user.write(new File(sc.next()));
 				break;
 			
@@ -92,7 +91,7 @@ public class Menu
 				break;
 				
 			case 3: // list files
-				user.listFiles();
+				user.listFILES();
 				break;
 				
 			case 4: // delete files

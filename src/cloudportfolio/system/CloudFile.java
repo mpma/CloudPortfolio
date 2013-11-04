@@ -12,7 +12,7 @@ public class CloudFile
 {	
 	private File file;
 	private long fileID;
-	private boolean visible;
+	//private boolean visible; removed for the time being
 	
 	private Hashtable owners;
 	private Hashtable r;
@@ -22,10 +22,10 @@ public class CloudFile
 	private final int READWRITE = 2;
 	
 	
-	public CloudFile(File file, boolean visible, User owner)
+	public CloudFile(File file, User owner)
 	{
 		this.file = file;
-		this.visible = visible;
+		//this.visible = visible;
 		
 		owners = new Hashtable<Long, User>();
 		r = new Hashtable<Long, User>();
@@ -63,6 +63,11 @@ public class CloudFile
 			add(rw, user);
 			break;
 		}
+	}
+	
+	public void setVisibility(boolean visible)
+	{
+		//this.visible = visible;
 	}
 	
 	public File getFile()

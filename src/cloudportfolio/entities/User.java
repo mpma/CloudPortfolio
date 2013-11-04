@@ -2,7 +2,6 @@ package cloudportfolio.entities;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -10,7 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import cloudportfolio.system.Account;
-import cloudportfolio.system.CloudPortfolio;
+import cloudportfolio.system.CloudFile;
 import cloudportfolio.utilities.Uploader;
 
 public class User
@@ -20,7 +19,7 @@ public class User
 	private long id;
 	private Account acc;
 	private File userDir;
-	private List<File> files;
+	private List<CloudFile> files;
 	private Uploader uploader;
 	
 	private Scanner sc = new Scanner(System.in);
@@ -31,7 +30,7 @@ public class User
 		this.id = id;
 		this.userDir = userDir;
 		
-		files = new ArrayList<File>();
+		files = new ArrayList<CloudFile>();
 		acc = new Account(this.name);
 	}
 	
@@ -59,7 +58,7 @@ public class User
 	{
 		File file = new File(userDir + "\\" + f.getName());
 		f.renameTo(file);
-		files.add(file);
+		files.add(new CloudFile(file, this));
 	}
 	
 	public void listFiles()
@@ -77,6 +76,13 @@ public class User
 				filer = listofFiles[i].getName();
 				System.out.println(filer+ "\\");
 			}
+		}
+	}
+	
+	public void listFILES()
+	{
+		for(CloudFile cf : files) {
+			System.out.println(cf.getFile().getName());
 		}
 	}
 	
@@ -117,5 +123,7 @@ public class User
 	public long getID() { return id; }
 	
 	public File getUserDir() { return userDir; }
+	
+	public List<CloudFile> getFiles() { return files; }
 
 }
