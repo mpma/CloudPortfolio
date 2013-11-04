@@ -79,59 +79,26 @@ public class CloudPortfolio
 			if(line.matches("user:.*")) {
 				userDir = new File(rootDir + "\\" + line.substring(5));
 				userDir.mkdir();
-				users.add(new User(line.substring(5), count++, userDir));
+				
+				User user = new User(line.substring(5), count++, userDir);
+				addUserFiles(user);
+				
+				users.add(user);
 			}
-
 		}
 	}
 
-	/*
-	 * Boot menu, could possibly be renamed
-	 */
-//	private void boot() throws IOException
-//	{
-//		boolean keepRunning = true;
-//		int val = 0;
-//
-//		System.out.println("###\tCloudPortfolio\t###");
-//
-//		while(keepRunning) {
-//			displayOptions();
-//			val = sc.nextInt();
-//
-//			switch(val) {
-//			case 1: // create account
-//				promptCredentials();
-//				createAccount();
-//				break;
-//
-//			case 2: // log in
-//				promptCredentials();
-//				if(logIn()) {
-//					System.out.println("Log in successful!");
-//					userPanel();
-//				}
-//				else
-//					System.err.println("DID NOT FOUND USER");
-//				break;
-//
-//			case 3: // list users
-//				listUsers();
-//				break;
-//
-//			case 4:	// delete user
-//				listUsers();
-//				System.out.print("Select user for deletion: ");
-//				deleteUser(sc.next());
-//				break;
-//
-//			case 5: // exit
-//				System.exit(0);
-//				break;
-//			}
-//		}
-//
-//	}
+	private void addUserFiles(User user)
+	{
+		File[] listOfFiles = user.getUserDir().listFiles();
+		String filer;
+		
+		for(int i = 0; i < listOfFiles.length; i++) {
+			if(listOfFiles[i].isFile()) {
+				user.getFiles().add(new CloudFile(listOfFiles[i], user));
+			}
+		}
+	}
 
 	/*
 	 * Needs to be better implemented, does not work in present form.
