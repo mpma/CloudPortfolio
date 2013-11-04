@@ -1,50 +1,73 @@
 package cloudportfolio.system;
 
 import java.io.File;
+import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Set;
+import java.util.concurrent.locks.ReadWriteLock;
 
 import cloudportfolio.entities.User;
 
 public class CloudFile
-{
+{	
 	private File file;
 	private long fileID;
 	private boolean visible;
 	
-	private Set<User> r;		// read
-	private Set<User> rw;		// read + write
-	private Set<User> owners;	
+	private Hashtable owners;
+	private Hashtable r;
+	private Hashtable rw;
 	
-	public CloudFile(File file, boolean visible)
+	private final int READ = 1;
+	private final int READWRITE = 2;
+	
+	
+	public CloudFile(File file, boolean visible, User owner)
 	{
 		this.file = file;
 		this.visible = visible;
+		
+		owners = new Hashtable<Long, User>();
+		r = new Hashtable<Long, User>();
+		rw = new Hashtable<Long, User>();
+		
+		add(owners, owner);
 	}
 	
-	private void notifyOwners()
+	// adds user to a specific Hashtable
+	private boolean add(Hashtable<Long, User> table, User user)
 	{
-		
+		if(table.containsKey(user.getID()))
+			return false;
+		else {
+			table.put(user.getID(), user);
+			return true;
+		}
+	}
+	
+	/**
+	 * Set's access permissions for a specific user
+	 * 
+	 * @param user
+	 * @param i - [1: READ] [2: READ/WRITE]
+	 */
+	public void setAccess(User user, int i)
+	{
+		switch(i)
+		{
+		case READ:
+			add(r, user);
+			break;
+			
+		case READWRITE:
+			add(rw, user);
+			break;
+		}
 	}
 	
 	public File getFile()
 	{
-		return this.file;
+		return file;
 	}
-	
-	public long getFileID()
-	{
-		return this.fileID;
-	}
-	
-	public int getAccess(long ID)
-	{
-		return 0;
-	}
-	
-	public void setAccess(long ID, int i)
-	{
-		
-	}
-	
 
 }

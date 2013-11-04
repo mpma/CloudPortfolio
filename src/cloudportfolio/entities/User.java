@@ -52,7 +52,6 @@ public class User
 		while((line = br.readLine()) != null)
 		{
 			System.out.println(line);
-
 		}
 	}
 	
